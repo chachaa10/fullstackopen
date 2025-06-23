@@ -1,11 +1,14 @@
 import { useEffect, useState } from 'react';
+import { Footer } from './components/Footer';
 import Note from './components/Note';
+import Notification from './components/Notification';
 import notesService from './services/notes';
 
 const App = () => {
   const [notes, setNotes] = useState([]);
   const [newNotes, setNewNotes] = useState('');
   const [showAll, setShowAll] = useState(true);
+  const [errorMessage, setErrorMessage] = useState('some error happened...');
 
   useEffect(() => {
     notesService.getAllNotes().then((initialNotes) => {
@@ -41,8 +44,10 @@ const App = () => {
         setNotes(notes.map((note) => (note.id === id ? returnedNote : note)));
       })
       .catch((error) => {
-        console.error('error:', error);
-        alert(`the note ${note.content} was already deleted from server`);
+        setErrorMessage(`Note ${note.content} was already removed from server`);
+        setTimeout(() => {
+          setErrorMessage(null);
+        }, 5000);
         setNotes(notes.filter((n) => n.id !== id));
       });
   };
@@ -52,6 +57,10 @@ const App = () => {
   return (
     <div>
       <h1>Notes</h1>
+      <Notification message={errorMessage} />
+      <button onClick={() => setShowAll(!showAll)}>
+        show {showAll ? 'important' : 'all'}
+      </button>
       <ul>
         {notesToShow.map((note) => (
           <Note
@@ -61,7 +70,6 @@ const App = () => {
           />
         ))}
       </ul>
-
       <form onSubmit={addNote}>
         <input
           type='text'
@@ -70,10 +78,7 @@ const App = () => {
         />
         <button type='submit'>save</button>
       </form>
-
-      <button onClick={() => setShowAll(!showAll)}>
-        show {showAll ? 'important' : 'all'}
-      </button>
+      <Footer />
     </div>
   );
 };
