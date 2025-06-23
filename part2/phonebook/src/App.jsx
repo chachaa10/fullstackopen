@@ -6,7 +6,7 @@ import PersonForm from './components/PersonForm';
 import phoneService from './services/phone';
 
 const App = () => {
-  const [persons, setPersons] = useState([]);
+  const [persons, setPersons] = useState(null);
   const [searchFilter, setSearchFilter] = useState('');
   const [notificationMessage, setNotificationMessage] = useState(null);
   const [isSuccess, setIsSuccess] = useState(null);
@@ -15,11 +15,15 @@ const App = () => {
     phoneService
       .getPersons()
       .then((returnedPersons) => setPersons(returnedPersons));
-  }, []);
+  }, [persons]);
 
   const filteredPersons = persons.filter((person) =>
     person.name.toLowerCase().includes(searchFilter.toLowerCase())
   );
+
+  if (!persons) {
+    return null;
+  }
 
   return (
     <>
