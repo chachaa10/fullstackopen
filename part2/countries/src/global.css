@@ -1,0 +1,12 @@
+.country-list > li {
+  list-style: none;
+}
+
+.capital,
+.area {
+  margin: 0;
+}
+
+img {
+  object-fit: cover;
+}
