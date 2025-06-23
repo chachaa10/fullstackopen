@@ -5,7 +5,7 @@ import Notification from './components/Notification';
 import notesService from './services/notes';
 
 const App = () => {
-  const [notes, setNotes] = useState([]);
+  const [notes, setNotes] = useState(null);
   const [newNotes, setNewNotes] = useState('');
   const [showAll, setShowAll] = useState(true);
   const [errorMessage, setErrorMessage] = useState('some error happened...');
@@ -14,7 +14,7 @@ const App = () => {
     notesService.getAllNotes().then((initialNotes) => {
       setNotes(initialNotes);
     });
-  }, []);
+  }, [notes]);
 
   const addNote = (event) => {
     event.preventDefault();
@@ -43,7 +43,7 @@ const App = () => {
       .then((returnedNote) => {
         setNotes(notes.map((note) => (note.id === id ? returnedNote : note)));
       })
-      .catch((error) => {
+      .catch(() => {
         setErrorMessage(`Note ${note.content} was already removed from server`);
         setTimeout(() => {
           setErrorMessage(null);
@@ -51,6 +51,10 @@ const App = () => {
         setNotes(notes.filter((n) => n.id !== id));
       });
   };
+
+  if (!notes) {
+    return null;
+  }
 
   const notesToShow = showAll ? notes : notes.filter((note) => note.important);
 
