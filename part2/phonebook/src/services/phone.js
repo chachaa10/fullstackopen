@@ -2,18 +2,19 @@ import axios from 'axios';
 
 const baseUrl = 'http://localhost:3001/persons';
 
-const getPersons = () => {
-  return axios.get(baseUrl).then((response) => response.data);
+const getPersons = async () => {
+  const response = await axios.get(baseUrl);
+  return response.data;
 };
 
-const createPerson = (person) => {
-  return axios.post(baseUrl, person).then((response) => response.data);
+const createPerson = async (person) => {
+  const response = await axios.post(baseUrl, person);
+  return response.data;
 };
 
-const updatePerson = (id, person) => {
-  return axios
-    .put(`${baseUrl}/${id}`, person)
-    .then((response) => response.data);
+const updatePerson = async (id, person) => {
+  const response = await axios.put(`${baseUrl}/${id}`, person);
+  return response.data;
 };
 
 const deletePerson = (id) => {

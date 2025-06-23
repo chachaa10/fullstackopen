@@ -1,16 +1,26 @@
 import { useState } from 'react';
-import phoneService from './services/phone';
-import { capitalizedName } from './utils/capitalizedName';
+import phoneService from '../services/phone';
+import { capitalizedName } from '../utils/capitalizedName';
 
-const PersonForm = ({ persons, setPersons }) => {
+const PersonForm = ({
+  persons,
+  setPersons,
+  setNotificationMessage,
+  setIsSuccess,
+}) => {
   const [newName, setNewName] = useState('');
   const [newPhone, setNewPhone] = useState('');
 
-  function handleSubmit(event) {
+  const handleSubmit = (event) => {
     event.preventDefault();
 
     if (!newName.trim() || !newPhone.trim()) {
-      alert('Please fill in all fields');
+      setNotificationMessage('Name or phone number cannot be empty');
+      setIsSuccess(false);
+      setTimeout(() => {
+        setIsSuccess(null);
+        setNotificationMessage(null);
+      }, 5000);
       return;
     }
 
@@ -21,7 +31,7 @@ const PersonForm = ({ persons, setPersons }) => {
     if (existingPerson) {
       const confirmMessage = `${capitalizedName(
         newName
-      )} is already added to phonebook, replace the old number with a new one?`;
+      )} is already added to phone book, replace the old number with a new one?`;
       if (window.confirm(confirmMessage)) {
         const updatedPersonNumber = { ...existingPerson, number: newPhone };
         phoneService
@@ -32,29 +42,56 @@ const PersonForm = ({ persons, setPersons }) => {
                 person.id !== existingPerson.id ? person : returnedPerson
               )
             );
+
+            setNotificationMessage(
+              `Updated ${capitalizedName(newName)} with new number: ${newPhone}`
+            );
+            setIsSuccess(true);
+            setTimeout(() => {
+              setIsSuccess(null);
+              setNotificationMessage(null);
+            }, 5000);
+
             setNewName('');
             setNewPhone('');
+          })
+          .catch(() => {
+            setIsSuccess(false);
+            setNotificationMessage(
+              `Information of ${capitalizedName(
+                newName
+              )} has already been removed from server`
+            );
+            setTimeout(() => {
+              setIsSuccess(null);
+              setNotificationMessage(null);
+            }, 5000);
           });
       }
       return;
     }
 
     const newPerson = {
-      name: capitalizedName(newName),
+      name: capitalizedName(newName.trim()),
       number: newPhone,
     };
 
-    phoneService
-      .createPerson(newPerson)
-      .then((returnedPerson) => {
-        setPersons([...persons, returnedPerson]);
-        setNewName('');
-        setNewPhone('');
-      })
-      .catch((error) => {
-        alert(error.response.data.error);
-      });
-  }
+    phoneService.createPerson(newPerson).then((returnedPerson) => {
+      setPersons([...persons, returnedPerson]);
+
+      setNotificationMessage(
+        `Added ${capitalizedName(newName)} with number: ${newPhone}`
+      );
+      setIsSuccess(true);
+      setTimeout(() => {
+        setIsSuccess(null);
+        setNotificationMessage(null);
+      }, 5000);
+
+      setNewName('');
+      setNewPhone('');
+    });
+  };
 
   return (
     <form

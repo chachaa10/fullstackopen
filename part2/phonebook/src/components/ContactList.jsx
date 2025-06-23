@@ -1,5 +1,10 @@
-import phoneService from './services/phone';
-const ContactList = ({ persons, setPersons }) => {
+import phoneService from '../services/phone';
+const ContactList = ({
+  persons,
+  setPersons,
+  setNotificationMessage,
+  setIsSuccess,
+}) => {
   const handleDelete = (id) => {
     const person = persons.find((person) => person.id === id);
 
@@ -9,8 +14,16 @@ const ContactList = ({ persons, setPersons }) => {
         .then(() => {
           setPersons(persons.filter((person) => person.id !== id));
         })
-        .catch((error) => {
-          alert(error.response.data.error);
+        .catch(() => {
+          setNotificationMessage(
+            `Information of ${person.name} has already been removed from server`
+          );
+          setIsSuccess(false);
+
+          setTimeout(() => {
+            setIsSuccess(null);
+            setNotificationMessage(null);
+          }, 5000);
         });
     }
   };
