@@ -3,6 +3,7 @@ import morgan from 'morgan';
 
 const app = express();
 
+app.use(express.static('dist'));
 app.use(express.json());
 
 morgan.token('req-body', (req, res) => {
@@ -18,6 +19,7 @@ app.use(
     `:method :url :status :res[content-length] - :response-time ms || Body: :req-body`
   )
 );
+
 let persons = [
   {
     id: '1',
@@ -113,8 +115,7 @@ app.delete('/api/persons/:id', (req, res) => {
   res.status(204).end();
 });
 
-const PORT = 3001;
+const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
-  console.clear();
   console.log(`Server running on port http://localhost:${PORT}`);
 });
