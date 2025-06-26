@@ -1,5 +1,9 @@
+import dotenv from 'dotenv';
 import express from 'express';
 import morgan from 'morgan';
+import { PersonModel } from './model/person';
+
+dotenv.config();
 
 const app = express();
 
@@ -20,61 +24,32 @@ app.use(
   )
 );
 
-let persons = [
-  {
-    id: '1',
-    name: 'Arto Hellas',
-    number: '040-123456',
-  },
-  {
-    id: '2',
-    name: 'Ada Lovelace',
-    number: '39-44-5323523',
-  },
-  {
-    id: '3',
-    name: 'Dan Abramov',
-    number: '12-43-234345',
-  },
-  {
-    id: '4',
-    name: 'Mary Poppendieck',
-    number: '39-23-6423122',
-  },
-];
-
 app.get('/api/persons', (req, res) => {
-  res.json(persons);
+  PersonModel.find({})
+    .then((persons) => {
+      res.json(persons);
+    })
+    .catch((error) => {
+      res.status(500).json({ error: 'cannot fetch persons' });
+    });
 });
 
 app.get('/api/persons/:id', (req, res) => {
   const id = req.params.id;
-  const person = persons.find((person) => person.id === id);
-  if (person) {
-    res.json(person);
-  } else {
-    res.statusMessage = 'Person not found';
-    res.status(404).end();
-  }
+
+  PersonModel.findById(id)
+    .then((person) => {
+      if (person) {
+        res.json(person);
+      } else {
+        res.status(404).end();
+      }
+    })
+    .catch((error) => {
+      console.log('error:', error);
+      res.status(500).json({ error: 'cannot fetch person' });
+    });
 });
-
-app.get('/info', (req, res) => {
-  const date = new Date();
-  res.send(
-    `<p>Phonebook has info for ${persons.length} people</p>
-    <p>${date}</p>`
-  );
-});
-
-const generateRandomId = () => {
-  const id = Math.floor(Math.random() * 100000000);
-
-  if (persons.find((person) => person.id === id)) {
-    return generateRandomId();
-  }
-
-  return String(id);
-};
 
 app.post('/api/persons', (req, res) => {
   const body = req.body;
@@ -85,34 +60,66 @@ app.post('/api/persons', (req, res) => {
     });
   }
 
-  if (persons.find((person) => person.name === body.name)) {
-    return res.status(400).json({
-      error: 'name must be unique',
-    });
-  }
-
+  // save person
   const person = {
-    id: generateRandomId(),
     name: body.name,
     number: body.number,
   };
 
-  persons = [...persons, person];
+  PersonModel.create(person)
+    .then((savedPerson) => {
+      res.json(savedPerson);
+    })
+    .catch((error) => {
+      res.status(500).json({ error: 'cannot save person' });
+    });
+});
 
-  res.json(person);
+app.put('/api/persons/:id', (req, res) => {
+  const id = req.params.id;
+  const body = req.body;
+
+  if (!body.name || !body.number) {
+    return res.status(400).json({
+      error: 'name or number missing',
+    });
+  }
+
+  const person = {
+    name: body.name,
+    number: body.number,
+  };
+
+  PersonModel.findByIdAndUpdate(id, person, { new: true })
+    .then((savedPerson) => {
+      res.json(savedPerson);
+    })
+    .catch((error) => {
+      res.status(500).json({ error: 'cannot update person' });
+    });
 });
 
 app.delete('/api/persons/:id', (req, res) => {
   const id = req.params.id;
 
-  if (!persons.find((person) => person.id === id)) {
-    res.statusMessage = 'Person not found';
-    return res.status(404).end();
-  }
+  // check if person exists
+  PersonModel.find({}).then((persons) => {
+    if (!persons.find((person) => person.id === id)) {
+      return res.status(400).json({
+        error: 'person not found',
+      });
+    }
+  });
 
-  persons = persons.filter((person) => person.id !== id);
-  res.statusMessage = 'Person deleted';
-  res.status(204).end();
+  // delete person
+  PersonModel.findByIdAndDelete(id)
+    .then(() => {
+      res.status(204).end();
+    })
+    .catch((error) => {
+      console.log('error:', error);
+      res.status(500).json({ error: 'cannot delete person' });
+    });
 });
 
 const PORT = process.env.PORT || 3001;
