@@ -8,7 +8,7 @@ dotenv.config();
 const app = express();
 
 // middlewares
-morgan.token('req-body', (req, res) => {
+morgan.token('req-body', (req) => {
   if (req.method === 'POST' && req.body) {
     return JSON.stringify(req.body);
   }
@@ -20,7 +20,7 @@ app.use(express.static('dist'));
 app.use(express.json());
 app.use(
   morgan(
-    `:method :url :status :res[content-length] - :response-time ms || Body: :req-body`
+    ':method :url :status :res[content-length] - :response-time ms || Body: :req-body'
   )
 );
 
@@ -29,7 +29,7 @@ app.get('/api/persons', (req, res) => {
     .then((persons) => {
       res.json(persons);
     })
-    .catch((error) => {
+    .catch(() => {
       res.status(500).json({ error: 'cannot fetch persons' });
     });
 });
