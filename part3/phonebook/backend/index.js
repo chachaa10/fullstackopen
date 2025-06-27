@@ -7,9 +7,7 @@ dotenv.config();
 
 const app = express();
 
-app.use(express.static('dist'));
-app.use(express.json());
-
+// middlewares
 morgan.token('req-body', (req, res) => {
   if (req.method === 'POST' && req.body) {
     return JSON.stringify(req.body);
@@ -18,6 +16,8 @@ morgan.token('req-body', (req, res) => {
   return '-';
 });
 
+app.use(express.static('dist'));
+app.use(express.json());
 app.use(
   morgan(
     `:method :url :status :res[content-length] - :response-time ms || Body: :req-body`
@@ -34,7 +34,7 @@ app.get('/api/persons', (req, res) => {
     });
 });
 
-app.get('/api/persons/:id', (req, res) => {
+app.get('/api/persons/:id', (req, res, next) => {
   const id = req.params.id;
 
   PersonModel.findById(id)
@@ -46,8 +46,7 @@ app.get('/api/persons/:id', (req, res) => {
       }
     })
     .catch((error) => {
-      console.log('error:', error);
-      res.status(500).json({ error: 'cannot fetch person' });
+      next(error);
     });
 });
 
@@ -66,16 +65,12 @@ app.post('/api/persons', (req, res) => {
     number: body.number,
   };
 
-  PersonModel.create(person)
-    .then((savedPerson) => {
-      res.json(savedPerson);
-    })
-    .catch((error) => {
-      res.status(500).json({ error: 'cannot save person' });
-    });
+  PersonModel.create(person).then((savedPerson) => {
+    res.json(savedPerson);
+  });
 });
 
-app.put('/api/persons/:id', (req, res) => {
+app.put('/api/persons/:id', (req, res, next) => {
   const id = req.params.id;
   const body = req.body;
 
@@ -95,21 +90,12 @@ app.put('/api/persons/:id', (req, res) => {
       res.json(savedPerson);
     })
     .catch((error) => {
-      res.status(500).json({ error: 'cannot update person' });
+      next(error);
     });
 });
 
-app.delete('/api/persons/:id', (req, res) => {
+app.delete('/api/persons/:id', (req, res, next) => {
   const id = req.params.id;
-
-  // check if person exists
-  PersonModel.find({}).then((persons) => {
-    if (!persons.find((person) => person.id === id)) {
-      return res.status(400).json({
-        error: 'person not found',
-      });
-    }
-  });
 
   // delete person
   PersonModel.findByIdAndDelete(id)
@@ -117,10 +103,26 @@ app.delete('/api/persons/:id', (req, res) => {
       res.status(204).end();
     })
     .catch((error) => {
-      console.log('error:', error);
-      res.status(500).json({ error: 'cannot delete person' });
+      next(error);
     });
 });
+
+// error handlers
+const unknownEndpoint = (req, res) => {
+  res.status(404).send({ error: 'unknown endpoint' });
+};
+
+const errorHandler = (error, req, res, next) => {
+  console.error(error.message);
+
+  if (error.name === 'CastError')
+    return res.status(400).send({ error: 'malformatted id' });
+
+  next(error);
+};
+
+app.use(unknownEndpoint);
+app.use(errorHandler);
 
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
