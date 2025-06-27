@@ -23,7 +23,7 @@ const ContactList = ({
           setTimeout(() => {
             setIsSuccess(null);
             setNotificationMessage(null);
-          }, 5000);
+          }, 15000);
         });
     }
   };
