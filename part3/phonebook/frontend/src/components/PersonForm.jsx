@@ -25,7 +25,8 @@ const PersonForm = ({
     }
 
     const existingPerson = persons.find(
-      (person) => person.name.toLowerCase() === newName.toLowerCase()
+      (person) =>
+        person.name.toLowerCase().trim() === newName.toLowerCase().trim()
     );
 
     if (existingPerson) {
@@ -73,7 +74,7 @@ const PersonForm = ({
 
     const newPerson = {
       name: capitalizedName(newName.trim()),
-      number: newPhone,
+      number: newPhone.trim(),
     };
 
     phoneService.createPerson(newPerson).then((returnedPerson) => {
