@@ -10,6 +10,7 @@ const PersonForm = ({
 }) => {
   const [newName, setNewName] = useState('');
   const [newPhone, setNewPhone] = useState('');
+  const HIDE_ERROR_TIMEOUT = 15000;
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -20,13 +21,13 @@ const PersonForm = ({
       setTimeout(() => {
         setIsSuccess(null);
         setNotificationMessage(null);
-      }, 5000);
+      }, HIDE_ERROR_TIMEOUT);
       return;
     }
 
     const existingPerson = persons.find(
       (person) =>
-        person.name.toLowerCase().trim() === newName.toLowerCase().trim()
+        person.name.trim().toLowerCase() === newName.trim().toLowerCase()
     );
 
     if (existingPerson) {
@@ -51,7 +52,7 @@ const PersonForm = ({
             setTimeout(() => {
               setIsSuccess(null);
               setNotificationMessage(null);
-            }, 5000);
+            }, HIDE_ERROR_TIMEOUT);
 
             setNewName('');
             setNewPhone('');
@@ -66,7 +67,7 @@ const PersonForm = ({
             setTimeout(() => {
               setIsSuccess(null);
               setNotificationMessage(null);
-            }, 5000);
+            }, HIDE_ERROR_TIMEOUT);
           });
       }
       return;
@@ -77,21 +78,33 @@ const PersonForm = ({
       number: newPhone.trim(),
     };
 
-    phoneService.createPerson(newPerson).then((returnedPerson) => {
-      setPersons([...persons, returnedPerson]);
+    phoneService
+      .createPerson(newPerson)
+      .then((returnedPerson) => {
+        setPersons([...persons, returnedPerson]);
 
-      setNotificationMessage(
-        `Added ${capitalizedName(newName)} with number: ${newPhone}`
-      );
-      setIsSuccess(true);
-      setTimeout(() => {
-        setIsSuccess(null);
-        setNotificationMessage(null);
-      }, 5000);
+        setNotificationMessage(
+          `Added ${capitalizedName(newName)} with number: ${newPhone}`
+        );
+        setIsSuccess(true);
 
-      setNewName('');
-      setNewPhone('');
-    });
+        setTimeout(() => {
+          setIsSuccess(null);
+          setNotificationMessage(null);
+        }, HIDE_ERROR_TIMEOUT);
+
+        setNewName('');
+        setNewPhone('');
+      })
+      .catch((error) => {
+        setIsSuccess(false);
+        setNotificationMessage(error.response.data.error);
+
+        setTimeout(() => {
+          setIsSuccess(null);
+          setNotificationMessage(null);
+        }, HIDE_ERROR_TIMEOUT);
+      });
   };
 
   return (
