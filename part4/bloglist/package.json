@@ -1,0 +1,27 @@
+{
+  "name": "bloglist",
+  "version": "0.0.1",
+  "description": "List of blogs",
+  "license": "MIT",
+  "author": "Chalex",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "start": "cross-env NODE_ENV=production node index.js",
+    "dev": "cross-env NODE_ENV=development node --watch index.js",
+    "test": "cross-env NODE_ENV=test node --test",
+    "lint": "eslint ."
+  },
+  "dependencies": {
+    "cross-env": "^7.0.3",
+    "express": "^5.1.0",
+    "mongoose": "^8.16.1"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.29.0",
+    "dotenv": "^16.6.0",
+    "eslint": "^9.29.0",
+    "globals": "^16.2.0",
+    "supertest": "^7.1.1"
+  }
+}
