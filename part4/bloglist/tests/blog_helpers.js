@@ -68,8 +68,21 @@ const blogs = [
   },
 ];
 
+const nonExistingId = async () => {
+  const blog = new BlogModel({
+    title: 'test',
+    author: 'test',
+    url: 'http://test.com',
+  });
+  await blog.save();
+  await blog.deleteOne();
+
+  return blog._id.toString();
+};
+
 module.exports = {
   listWithOneBlog,
   blogs,
   blogsInDb,
+  nonExistingId,
 };
