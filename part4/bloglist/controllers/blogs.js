@@ -1,32 +1,36 @@
 const blogRouter = require('express').Router();
 const { BlogModel } = require('../models/blog');
-const logger = require('../utils/logger');
 
 // retrieve all blogs
-blogRouter.get('/', (request, response) => {
-  BlogModel.find({}).then((returnedBlogs) => {
-    response.json(returnedBlogs);
-  });
+blogRouter.get('/', async (request, response, next) => {
+  try {
+    const blogs = await BlogModel.find({});
+    response.json(blogs);
+  } catch (error) {
+    next(error);
+  }
 });
 
 // retrieve one blog
-blogRouter.get('/:id', (request, response, next) => {
+blogRouter.get('/:id', async (request, response, next) => {
   const id = request.params.id;
 
-  BlogModel.findById(id)
-    .then((returnedBlog) => {
-      if (returnedBlog) {
-        response.json(returnedBlog);
-      } else {
-        response.status(404).end();
-      }
-    })
-    .catch((error) => next(error));
+  try {
+    const blog = await BlogModel.findById(id);
+
+    if (!blog) {
+      return response.status(404).json({ error: 'blog not found' });
+    }
+
+    response.json(blog);
+  } catch (error) {
+    next(error);
+  }
 });
 
 // create blog
-blogRouter.post('/', (request, response, next) => {
-  const { title, author, url } = request.body;
+blogRouter.post('/', async (request, response, next) => {
+  const { title, author, url, likes } = request.body;
 
   if (!title) {
     return response.status(400).json({ error: 'title is required' });
@@ -40,20 +44,19 @@ blogRouter.post('/', (request, response, next) => {
     title,
     author,
     url,
+    likes: likes || 0,
   });
 
-  blog
-    .save()
-    .then((savedBlog) => {
-      logger.info(`Added blog ${savedBlog.title} by ${savedBlog.author}`);
-      response.status(201).json(savedBlog);
-    })
-    .catch((error) => next(error));
+  try {
+    const savedBlog = await blog.save();
+    response.status(201).json(savedBlog);
+  } catch (error) {
+    next(error);
+  }
 });
 
 // update blog
-blogRouter.put('/:id', (request, response, next) => {
-  const id = request.params.id;
+blogRouter.put('/:id', async (request, response, next) => {
   const { title, author, url } = request.body;
 
   if (!title) {
@@ -70,22 +73,38 @@ blogRouter.put('/:id', (request, response, next) => {
     url,
   };
 
-  BlogModel.findByIdAndUpdate(id, blog, { new: true })
-    .then((updatedBlog) => {
-      response.json(updatedBlog);
-    })
-    .catch((error) => next(error));
+  const id = request.params.id;
+  try {
+    const updatedBlog = await BlogModel.findById(id);
+
+    if (!updatedBlog) {
+      return response.status(404).json({ error: 'blog not found' });
+    }
+
+    updatedBlog.set(blog);
+    const savedBlog = await updatedBlog.save();
+    response.json(savedBlog);
+  } catch (error) {
+    next(error);
+  }
 });
 
 // delete blog
-blogRouter.delete('/:id', (request, response, next) => {
+blogRouter.delete('/:id', async (request, response, next) => {
   const id = request.params.id;
 
-  BlogModel.findByIdAndDelete(id)
-    .then(() => {
-      response.status(204).end();
-    })
-    .catch((error) => next(error));
+  try {
+    const blog = await BlogModel.findById(id);
+
+    if (!blog) {
+      return response.status(404).json({ error: 'blog not found' });
+    }
+
+    await blog.deleteOne();
+    response.status(204).end();
+  } catch (error) {
+    next(error);
+  }
 });
 
 module.exports = blogRouter;
