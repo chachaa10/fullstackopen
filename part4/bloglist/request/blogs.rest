@@ -6,19 +6,20 @@ GET http://localhost:3001/api/blogs/685e664138f45ec846d07512
 ###
 POST http://localhost:3001/api/blogs
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImNoYWNoYSIsImlkIjoiNjg3NzBiZTI4Zjc1MjU0MTFkM2I4ZDU4IiwiaWF0IjoxNzUyNjQxMDgxLCJleHAiOjE3NTI2NDQ2ODF9.VsrCopQ2nQ7O8MrhkkCNExRU7KoLbC2mIgKYxYN5NgQ
 
 {
-  "title": "CSS is awesome",
-  "author": "Jhin",
-  "url": "http://example.com"
+  "title": "Chalex The Great",
+  "url": "http://yahoo.com"
 }
 
 ###
-PUT http://localhost:3001/api/blogs/68660a9012cf03f6e2f8b3f4
+PUT http://localhost:3001/api/blogs/6877364143c51ef5ecdc4c1e
 Content-Type: application/json
+Authorization: Bearer
 
 {
-  "title": "CSS is confusing",
+  "title": "Edi wow",
   "author": "Ashe",
   "url": "http://example.com"
 }
@@ -26,4 +27,9 @@ Content-Type: application/json
 
 
 ###
-DELETE http://localhost:3001/api/blogs/685e6f9a00c18d6187df21c2
+DELETE http://localhost:3001/api/blogs/68773931ecd199a206b88b82
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImpoaW4iLCJpZCI6IjY4NzczOTI1ZWNkMTk5YTIwNmI4OGI3ZiIsImlhdCI6MTc1MjY0MzkyMywiZXhwIjoxNzUyNjQ3NTIzfQ.qFIzhWc2gGW9kAEEa9WFyFY5e0T7nwL-oQRCSb0CDXQ
+
+
+###
+DELETE http://localhost:3001/api/blogs/

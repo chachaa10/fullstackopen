@@ -1,0 +1,20 @@
+GET http://localhost:3001/api/users
+
+###
+GET http://localhost:3001/api/users/6870c589e69e5b40ef8dbe54
+
+###
+POST http://localhost:3001/api/users
+Content-Type: application/json
+
+{
+  "username": "jhin",
+  "name": "jhin",
+  "password": "Jhin4444"
+}
+
+###
+DELETE http://localhost:3001/api/users/6870c987400b581c3bbd8ea8
+
+###
+DELETE http://localhost:3001/api/users
