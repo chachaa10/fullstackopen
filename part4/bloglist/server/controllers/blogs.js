@@ -39,12 +39,16 @@ blogsRouter.get('/:id', async (request, response, next) => {
 
 // create a blog
 blogsRouter.post('/', async (request, response, next) => {
-  const { title, url } = request.body;
+  const { title, author, url } = request.body;
 
   const blogErrorMessage = {};
 
   if (!title) {
     blogErrorMessage.title = 'title is required';
+  }
+
+  if (!author) {
+    blogErrorMessage.author = 'author is required';
   }
 
   const urlRegex = /^(https?):\/\/[-\w\d.]+\.[A-Za-z]{2,}(\/.*)?$/;
@@ -65,6 +69,14 @@ blogsRouter.post('/', async (request, response, next) => {
       return response
         .status(401)
         .json({ error: 'invalid token - user not found' });
+    }
+
+    if (user.name !== author) {
+      blogErrorMessage.author = 'author name mismatched';
+    }
+
+    if (Object.keys(blogErrorMessage).length > 0) {
+      return response.status(400).json({ error: blogErrorMessage });
     }
 
     const blog = new Blog({
