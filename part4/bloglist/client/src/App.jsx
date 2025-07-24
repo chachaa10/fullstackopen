@@ -58,6 +58,24 @@ const App = () => {
     setIsSuccess(null);
   };
 
+  const handleDelete = async (id) => {
+    try {
+      await blogService.deleteBlog(id);
+      setBlogs(blogs.filter((blog) => blog.id !== id));
+      setNotification('successfully delete blog');
+      setIsSuccess(true);
+    } catch (error) {
+      console.error('error deleting blog:', error);
+      setNotification('error deleting blog');
+      setIsSuccess(false);
+
+      setTimeout(() => {
+        setNotification(null);
+        setIsSuccess(false);
+      }, 5000);
+    }
+  };
+
   return (
     <>
       <h2>blogs</h2>
@@ -80,7 +98,13 @@ const App = () => {
       {blogs.length === 0 ? (
         <p>No blogs</p>
       ) : (
-        blogs.map((blog) => <Blog key={blog.id} blog={blog} />)
+        blogs.map((blog) => (
+          <Blog
+            key={blog.id}
+            blog={blog}
+            handleDelete={() => handleDelete(blog.id)}
+          />
+        ))
       )}
     </>
   );
