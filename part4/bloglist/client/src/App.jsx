@@ -14,7 +14,7 @@ const App = () => {
   const [notification, setNotification] = useState('');
   const [isSuccess, setIsSuccess] = useState(false);
 
-  const userKey = 'user';
+  const userKey = 'userBlogKey';
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem(userKey);

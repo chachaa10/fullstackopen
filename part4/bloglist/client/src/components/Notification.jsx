@@ -1,9 +1,6 @@
 const Notification = ({ isSuccess, notification }) => {
-  if (isSuccess) {
-    return <p className='success'>{notification}</p>;
-  } else if (!isSuccess) {
-    return <p className='error'>{notification}</p>;
-  }
+  const style = isSuccess ? 'success' : 'error';
+  return <p className={style}>{notification}</p>;
 };
 
 export default Notification;

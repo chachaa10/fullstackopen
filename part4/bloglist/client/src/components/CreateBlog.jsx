@@ -18,8 +18,7 @@ const CreateBlog = ({ blogs, setBlogs, setNotification, setIsSuccess }) => {
 
       setBlogs([...blogs, blog]);
 
-      const notification = `a new blog ${title} by ${author} added`;
-      setNotification(notification);
+      setNotification(`a new blog ${title} by ${author} added`);
       setIsSuccess(true);
 
       setTitle('');
