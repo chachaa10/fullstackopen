@@ -175,10 +175,10 @@ blogsRouter.delete('/:id', async (request, response, next) => {
 
     await blog.deleteOne();
 
-    user.blogs = (user.blogs || []).filter(
-      (b) => b.toString() !== blog._id.toString()
-    );
+    user.blogs.filter((b) => b.toString() !== blog._id.toString());
     await user.save();
+
+    return response.status(204).end();
   } catch (error) {
     next(error);
   }
