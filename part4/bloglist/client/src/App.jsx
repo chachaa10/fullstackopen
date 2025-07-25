@@ -73,7 +73,7 @@ const App = () => {
         setIsSuccess(false);
         setTimeout(() => {
           setNotification(null);
-          setIsSuccess(false);
+          setIsSuccess(null);
         }, 5000);
       }
     }
