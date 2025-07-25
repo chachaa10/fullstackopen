@@ -8,13 +8,13 @@ POST http://localhost:3001/api/users
 Content-Type: application/json
 
 {
-  "username": "jhin",
-  "name": "jhin",
-  "password": "Jhin4444"
+  "username": "ashe",
+  "name": "ashe",
+  "password": "Ashe1234"
 }
 
 ###
-DELETE http://localhost:3001/api/users/6870c987400b581c3bbd8ea8
+DELETE http://localhost:3001/api/users/68770be28f7525411d3b8d58
 
 ###
 DELETE http://localhost:3001/api/users
