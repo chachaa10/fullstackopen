@@ -1,8 +1,9 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Blog from './components/Blog';
 import CreateBlog from './components/CreateBlog';
 import LoginForm from './components/LoginForm';
 import Notification from './components/Notification';
+import ToggleVisible from './components/ToggleVisible';
 import blogService from './services/blogs';
 import './style.css';
 
@@ -13,6 +14,8 @@ const App = () => {
   const [user, setUser] = useState(null);
   const [notification, setNotification] = useState('');
   const [isSuccess, setIsSuccess] = useState(false);
+
+  const createBlogRef = useRef();
 
   const userKey = 'userBlogKey';
 
@@ -88,12 +91,15 @@ const App = () => {
         <button onClick={handleLogout}>logout</button>
       </p>
 
-      <CreateBlog
-        blogs={blogs}
-        setBlogs={setBlogs}
-        setIsSuccess={setIsSuccess}
-        setNotification={setNotification}
-      />
+      <ToggleVisible buttonLabel='create blog' ref={createBlogRef}>
+        <CreateBlog
+          blogs={blogs}
+          setBlogs={setBlogs}
+          setIsSuccess={setIsSuccess}
+          setNotification={setNotification}
+          ref={createBlogRef}
+        />
+      </ToggleVisible>
 
       {blogs.length === 0 ? (
         <p>No blogs</p>
