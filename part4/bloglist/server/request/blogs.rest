@@ -4,19 +4,20 @@ GET http://localhost:3001/api/blogs
 GET http://localhost:3001/api/blogs/685e664138f45ec846d07512
 
 ###
-POST http://localhost:3001/api/blogs
+POST http://localhost:3001/api/blogs/
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImNoYWNoYSIsImlkIjoiNjg3NzBiZTI4Zjc1MjU0MTFkM2I4ZDU4IiwiaWF0IjoxNzUyNjQxMDgxLCJleHAiOjE3NTI2NDQ2ODF9.VsrCopQ2nQ7O8MrhkkCNExRU7KoLbC2mIgKYxYN5NgQ
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImpoaW4iLCJpZCI6IjY4NzczOTI1ZWNkMTk5YTIwNmI4OGI3ZiIsImlhdCI6MTc1MzQzMTAzNCwiZXhwIjoxNzUzNDM0NjM0fQ.-pCo65CdoGxGouONo0RUiE3eAE2Z1QsHtYnukYgTHww
 
 {
   "title": "Chalex The Great",
+  "author": "jhin",
   "url": "http://yahoo.com"
 }
 
 ###
-PUT http://localhost:3001/api/blogs/6877364143c51ef5ecdc4c1e
+PUT http://localhost:3001/api/blogs/68833c30921d74523926c585/like
 Content-Type: application/json
-Authorization: Bearer
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImpoaW4iLCJpZCI6IjY4NzczOTI1ZWNkMTk5YTIwNmI4OGI3ZiIsImlhdCI6MTc1MzQzMTAzNCwiZXhwIjoxNzUzNDM0NjM0fQ.-pCo65CdoGxGouONo0RUiE3eAE2Z1QsHtYnukYgTHww
 
 {
   "title": "Edi wow",

@@ -79,6 +79,22 @@ const App = () => {
     }
   };
 
+  const handleLike = async (id) => {
+    try {
+      const likedBlog = await blogService.likeBlog(id);
+      setBlogs(
+        blogs.map((blog) => (blog.id === likedBlog.id ? likedBlog : blog))
+      );
+    } catch (error) {
+      setNotification(error?.response?.data?.error);
+      setIsSuccess(false);
+      setTimeout(() => {
+        setNotification(null);
+        setIsSuccess(null);
+      }, 5000);
+    }
+  };
+
   return (
     <>
       <h2>blogs</h2>
@@ -110,6 +126,7 @@ const App = () => {
             key={blog.id}
             blog={blog}
             handleDelete={() => handleDelete(blog.id)}
+            handleLike={() => handleLike(blog.id)}
           />
         ))
       )}

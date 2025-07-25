@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import capitalizeWord from '../utils/capitalizeWord';
 
-const Blog = ({ blog, handleDelete, user }) => {
+const Blog = ({ user, blog, handleDelete, handleLike }) => {
   const [visible, setVisible] = useState(false);
 
   const blogStyle = {
@@ -40,7 +40,7 @@ const Blog = ({ blog, handleDelete, user }) => {
         <a href={blog.url}>{blog.url}</a>
 
         <p>
-          likes {blog.likes} <button>like</button>
+          likes {blog.likes} <button onClick={handleLike}>like</button>
         </p>
         <p>{authorBlog}</p>
         <button style={hideUnauthorized} onClick={handleDelete}>

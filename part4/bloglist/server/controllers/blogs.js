@@ -99,7 +99,7 @@ blogsRouter.post('/', async (request, response, next) => {
   }
 });
 
-// update blog
+// TODO: fix update blog
 blogsRouter.put('/:id', async (request, response, next) => {
   const { title, author, url } = request.body;
 
@@ -128,23 +128,52 @@ blogsRouter.put('/:id', async (request, response, next) => {
     return response.status(400).json({ error: blogError });
   }
 
-  const blog = {
+  const blogObject = {
     title,
     author,
     url,
   };
 
-  const id = request.params.id;
   try {
-    const updatedBlog = await Blog.findById(id);
+    const blog = await Blog.findById(request.params.id);
 
-    if (!updatedBlog) {
+    if (!blog) {
       return response.status(404).json({ error: 'blog not found' });
     }
 
-    updatedBlog.set(blog);
-    const savedBlog = await updatedBlog.save();
-    response.status(201).json(savedBlog);
+    const user = request.user;
+
+    if (!user) {
+      return response
+        .status(401)
+        .json({ error: 'invalid token - user not found' });
+    }
+
+    blog.set(blogObject);
+    const savedBlog = await blog.save();
+    return response.status(201).json(savedBlog);
+  } catch (error) {
+    next(error);
+  }
+});
+
+// liking a blog
+blogsRouter.put('/:id/like', async (request, response, next) => {
+  try {
+    const blog = await Blog.findById(request.params.id);
+
+    if (!blog) {
+      return response.status(404).json({ error: 'blog not found' });
+    }
+
+    const likedBlog = {
+      likes: blog.likes + 1,
+    };
+
+    blog.set(likedBlog);
+
+    const updatedBlog = await blog.save();
+    return response.status(201).json(updatedBlog);
   } catch (error) {
     next(error);
   }
