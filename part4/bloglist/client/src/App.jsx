@@ -6,6 +6,7 @@ import Notification from './components/Notification';
 import ToggleVisible from './components/ToggleVisible';
 import blogService from './services/blogs';
 import './style.css';
+import capitalizeWord from './utils/capitalizeWord';
 
 const App = () => {
   const [blogs, setBlogs] = useState([]);
@@ -18,6 +19,8 @@ const App = () => {
   const createBlogRef = useRef();
 
   const userKey = 'userBlogKey';
+
+  const name = capitalizeWord(user?.name);
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem(userKey);
@@ -51,9 +54,6 @@ const App = () => {
       </>
     );
 
-  const capitalizeName =
-    user?.name.charAt(0).toUpperCase() + user?.name.slice(1);
-
   const handleLogout = () => {
     window.localStorage.removeItem(userKey);
     setUser(null);
@@ -62,20 +62,20 @@ const App = () => {
   };
 
   const handleDelete = async (id) => {
-if (window.confirm('Are you sure you want to delete this blog?')) {
-    try {
-      await blogService.deleteBlog(id);
-      setBlogs(blogs.filter((blog) => blog.id !== id));
-      setNotification('successfully delete blog');
-      setIsSuccess(true);
-    } catch (error) {
-            setNotification(error?.response?.data?.error);
-      setIsSuccess(false);
-      setTimeout(() => {
-        setNotification(null);
+    if (window.confirm('Are you sure you want to delete this blog?')) {
+      try {
+        await blogService.deleteBlog(id);
+        setBlogs(blogs.filter((blog) => blog.id !== id));
+        setNotification('successfully delete blog');
+        setIsSuccess(true);
+      } catch (error) {
+        setNotification(error?.response?.data?.error);
         setIsSuccess(false);
-      }, 5000);
-}
+        setTimeout(() => {
+          setNotification(null);
+          setIsSuccess(false);
+        }, 5000);
+      }
     }
   };
 
@@ -87,7 +87,7 @@ if (window.confirm('Are you sure you want to delete this blog?')) {
         <Notification isSuccess={isSuccess} notification={notification} />
       )}
       <p>
-        {capitalizeName} logged in {''}
+        {name} logged in {''}
         <button onClick={handleLogout}>logout</button>
       </p>
 
@@ -106,6 +106,7 @@ if (window.confirm('Are you sure you want to delete this blog?')) {
       ) : (
         blogs.map((blog) => (
           <Blog
+            user={user}
             key={blog.id}
             blog={blog}
             handleDelete={() => handleDelete(blog.id)}
