@@ -23,7 +23,7 @@ const LoginForm = ({
       setUsername('');
       setPassword('');
     } catch (error) {
-      setNotification('wrong username or password');
+      setNotification(error?.response?.data?.error);
       setTimeout(() => {
         setNotification(null);
       }, 5000);
