@@ -151,7 +151,7 @@ blogsRouter.put('/:id', async (request, response, next) => {
 
     blog.set(blogObject);
     const savedBlog = await blog.save();
-    return response.status(201).json(savedBlog);
+    response.status(201).json(savedBlog);
   } catch (error) {
     next(error);
   }
@@ -173,7 +173,7 @@ blogsRouter.put('/:id/like', async (request, response, next) => {
     blog.set(likedBlog);
 
     const updatedBlog = await blog.save();
-    return response.status(201).json(updatedBlog);
+    response.status(201).json(updatedBlog);
   } catch (error) {
     next(error);
   }
@@ -207,7 +207,7 @@ blogsRouter.delete('/:id', async (request, response, next) => {
     user.blogs.filter((b) => b.toString() !== blog._id.toString());
     await user.save();
 
-    return response.status(204).end();
+    response.status(204).end();
   } catch (error) {
     next(error);
   }
