@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import { useState } from 'react';
 import capitalizeWord from '../utils/capitalizeWord';
 
@@ -49,6 +50,13 @@ const Blog = ({ user, blog, handleDelete, handleLike }) => {
       </div>
     </div>
   );
+};
+
+Blog.propTypes = {
+  user: PropTypes.object.isRequired,
+  blog: PropTypes.object.isRequired,
+  handleDelete: PropTypes.func.isRequired,
+  handleLike: PropTypes.func.isRequired,
 };
 
 export default Blog;
