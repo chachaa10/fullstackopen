@@ -22,6 +22,8 @@ const App = () => {
 
   const name = capitalizeWord(user?.name);
 
+  const blogsToDisplay = blogs.toSorted((a, b) => b.likes - a.likes);
+
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem(userKey);
     if (loggedUserJSON) {
@@ -117,10 +119,10 @@ const App = () => {
         />
       </ToggleVisible>
 
-      {blogs.length === 0 ? (
-        <p>No blogs</p>
+      {blogsToDisplay.length === 0 ? (
+        <p>No blog</p>
       ) : (
-        blogs.map((blog) => (
+        blogsToDisplay.map((blog) => (
           <Blog
             user={user}
             key={blog.id}
