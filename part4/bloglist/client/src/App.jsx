@@ -83,9 +83,15 @@ const App = () => {
 
   const handleLike = async (id) => {
     try {
-      const likedBlog = await blogService.likeBlog(id);
+      const blogToUpdate = blogs.find((blog) => blog.id === id);
+      const returnedBlog = await blogService.likeBlog(id);
+
       setBlogs(
-        blogs.map((blog) => (blog.id === likedBlog.id ? likedBlog : blog))
+        blogs.map((blog) =>
+          blog.id === returnedBlog.id
+            ? { ...blog, ...returnedBlog, user: blogToUpdate.user }
+            : blog
+        )
       );
     } catch (error) {
       setNotification(error?.response?.data?.error);
@@ -101,9 +107,6 @@ const App = () => {
     <>
       <h2>blogs</h2>
 
-      {notification && (
-        <Notification isSuccess={isSuccess} notification={notification} />
-      )}
       <p>
         {name} logged in {''}
         <button onClick={handleLogout}>logout</button>
@@ -118,6 +121,10 @@ const App = () => {
           ref={createBlogRef}
         />
       </ToggleVisible>
+
+      {notification && (
+        <Notification isSuccess={isSuccess} notification={notification} />
+      )}
 
       {blogsToDisplay.length === 0 ? (
         <p>No blog</p>
