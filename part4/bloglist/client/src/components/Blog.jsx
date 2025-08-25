@@ -27,24 +27,38 @@ const Blog = ({ user, blog, handleDelete, handleLike }) => {
   const authorBlog = capitalizeWord(blog.author);
 
   return (
-    <div style={blogStyle}>
-      <p style={hideWhenView}>
-        {blog.title} by {authorBlog} <button onClick={handleView}>view</button>
+    <div style={blogStyle} className='blog-item'>
+      <p style={hideWhenView} className='blog-summary'>
+        {blog.title} by {authorBlog}{' '}
+        <button onClick={handleView} className='view-button'>
+          view
+        </button>
       </p>
 
-      <div style={showWhenView}>
-        <p>
+      <div style={showWhenView} className='blog-details'>
+        <p className='blog-title-author'>
           {blog.title} by {authorBlog}{' '}
-          <button onClick={handleView}>hide</button>
+          <button onClick={handleView} className='hide-button'>
+            hide
+          </button>
         </p>
 
-        <a href={blog.url}>{blog.url}</a>
+        <a href={blog.url} className='blog-url'>
+          {blog.url}
+        </a>
 
-        <p>
-          likes {blog.likes} <button onClick={handleLike}>like</button>
+        <p className='blog-likes'>
+          likes {blog.likes}{' '}
+          <button onClick={handleLike} className='like-button'>
+            like
+          </button>
         </p>
-        <p>{authorBlog}</p>
-        <button style={hideUnauthorized} onClick={handleDelete}>
+        <p className='blog-author-name'>{authorBlog}</p>
+        <button
+          style={hideUnauthorized}
+          onClick={handleDelete}
+          className='delete-button'
+        >
           delete
         </button>
       </div>
