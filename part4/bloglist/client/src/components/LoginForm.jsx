@@ -37,7 +37,7 @@ const LoginForm = ({
           <label htmlFor='username'>username </label>
           <input
             type='text'
-            name='Username'
+            name='username'
             id='username'
             value={username}
             onChange={(event) => setUsername(event.target.value)}
@@ -47,7 +47,7 @@ const LoginForm = ({
           <label htmlFor='password'>password </label>
           <input
             type='text'
-            name='Password'
+            name='password'
             id='password'
             value={password}
             onChange={(event) => setPassword(event.target.value)}

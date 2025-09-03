@@ -64,7 +64,7 @@ const CreateBlog = ({
           <label htmlFor='title'>title: </label>
           <input
             type='text'
-            name='Title'
+            name='title'
             id='title'
             value={title}
             onChange={(event) => setTitle(event.target.value)}
@@ -75,7 +75,7 @@ const CreateBlog = ({
           <label htmlFor='author'>author: </label>
           <input
             type='text'
-            name='Author'
+            name='author'
             id='author'
             value={author}
             onChange={(event) => setAuthor(event.target.value)}
@@ -86,7 +86,7 @@ const CreateBlog = ({
           <label htmlFor='url'>url: </label>
           <input
             type='text'
-            name='Url'
+            name='url'
             id='url'
             value={url}
             onChange={(event) => setUrl(event.target.value)}
