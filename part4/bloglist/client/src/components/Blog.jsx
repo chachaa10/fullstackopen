@@ -21,7 +21,7 @@ const Blog = ({ user, blog, handleDelete, handleLike }) => {
   const hideWhenView = { display: visible ? 'none' : '' };
   const showWhenView = { display: visible ? '' : 'none' };
 
-  const isSameAuthor = blog.user.username === user.username;
+  const isSameAuthor = blog.author === user.username;
   const hideUnauthorized = { display: isSameAuthor ? '' : 'none' };
 
   const authorBlog = capitalizeWord(blog.author);
